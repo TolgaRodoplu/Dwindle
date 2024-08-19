@@ -17,9 +17,10 @@ public class PlayerController : MonoBehaviour
     private bool canMove = true;
     private bool isRunning = false;
     private float currentSpeed;
-    [SerializeField] private float walkSpeed = 2.0f;
-    [SerializeField] private float runSpeed = 5.0f;
-    [SerializeField][Range(0.0f, 0.5f)] private float moveSmoothTime = 0.3f;
+    [SerializeField] private float walkSpeed = 3.0f;
+    [SerializeField] private float runSpeed = 6.0f;
+    [SerializeField] private float jumpForce = 10.0f;
+    [SerializeField][Range(0.0f, 0.5f)] private float moveSmoothTime = 0f;
     private Vector2 currentDir = Vector2.zero;
     private Vector2 currentDirVelocity = Vector2.zero;
     [SerializeField] private float gravity = -100f;
@@ -56,7 +57,6 @@ public class PlayerController : MonoBehaviour
         InterractWithObject();
         MouseLook();
         Move();
-
         //if (Input.GetKeyUp(KeyCode.Mouse0) && active)
         //    UI.instance.ToggleCanvas(true);
 
@@ -150,6 +150,14 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
     }
 
+    public void ScaleSpeed(float scaleMult)
+    {
+        runSpeed *= scaleMult;
+        walkSpeed *= scaleMult;
+        jumpForce *= scaleMult;
+        gravity *= scaleMult;
+    }
+
     void SetCanLook(object sender, bool canLook)
     {
         this.canLook = canLook;
@@ -159,16 +167,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!canMove) return;
 
-        if (Input.GetKeyDown(runKey))
-        {
-            isRunning = true;
-            currentSpeed = runSpeed;
-        }
-        if (Input.GetKeyUp(runKey))
-        {
-            isRunning = false;
-            currentSpeed = walkSpeed;
-        }
+        float currentSpeed = (Input.GetKey(KeyCode.LeftShift)) ? runSpeed : walkSpeed;
 
         Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -179,6 +178,11 @@ public class PlayerController : MonoBehaviour
         if (controller.isGrounded)
         {
             velocityY = 0.0f;
+
+            if(Input.GetKey(jumpKey)) 
+            {
+                velocityY = jumpForce;
+            }
         }
 
 
@@ -203,4 +207,6 @@ public class PlayerController : MonoBehaviour
         //UI.instance.ToggleCanvas(false);
         Cursor.lockState = CursorLockMode.Confined;
     }
+
+    
 }
