@@ -38,6 +38,10 @@ public class PlayerController : MonoBehaviour
     [Header("Interaction Parameters")]
     private KeyCode interactionKey = KeyCode.E;
 
+    [Header("Size Parameters")]
+    private bool isSmall = false;
+    private Vector3 normalSize = Vector3.zero;
+    public Vector3 smallSize = Vector3.zero;
 
 
 
@@ -68,6 +72,8 @@ public class PlayerController : MonoBehaviour
 
     private void InterractWithObject()
     {
+        if (isSmall) return;
+
         if (interactedObject != null)
         {
             if(Input.GetKeyDown(interactionKey))
@@ -156,6 +162,8 @@ public class PlayerController : MonoBehaviour
         walkSpeed *= scaleMult;
         jumpForce *= scaleMult;
         gravity *= scaleMult;
+
+        isSmall = !isSmall;
     }
 
     void SetCanLook(object sender, bool canLook)
@@ -179,7 +187,7 @@ public class PlayerController : MonoBehaviour
         {
             velocityY = 0.0f;
 
-            if(Input.GetKey(jumpKey)) 
+            if(Input.GetKey(jumpKey) && isSmall) 
             {
                 velocityY = jumpForce;
             }

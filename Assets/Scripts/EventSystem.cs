@@ -11,7 +11,7 @@ public class EventSystem : MonoBehaviour
     public event EventHandler<int> puzzleTriggered;
     public event EventHandler<bool> rotateObj, activateCross, pressEtoGrab, pressEtoRelease, holdRtoRotate;
     public event EventHandler<int[]> animationTriggered;
-    public event Action gameStarted, playStarted;
+    public event Action gameStarted, playStarted, passedPoint;
     void Awake()
     {
 
@@ -65,4 +65,8 @@ public class EventSystem : MonoBehaviour
         holdRtoRotate?.Invoke(this, active);
     }
 
+    public void CloseCloset()
+    {
+        passedPoint?.Invoke();
+    }
 }
