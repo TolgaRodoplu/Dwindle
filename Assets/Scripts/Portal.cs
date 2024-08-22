@@ -54,6 +54,15 @@ public class Portal : MonoBehaviour
         {
             isOverLapping = true;
         }
+        else
+        {
+            var grab = other.GetComponent<Grabbable>();
+            if (grab != null) 
+            {
+                grab.transform.position = grab.originalPos;
+                grab.transform.rotation = grab.originalRot;
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)

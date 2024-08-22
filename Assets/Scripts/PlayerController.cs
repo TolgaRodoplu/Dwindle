@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
+    private bool active = false;
     public Interactable interactedObject = null;
     public Transform playerCamera = null;
     private CharacterController controller = null;
@@ -16,9 +17,7 @@ public class PlayerController : MonoBehaviour
     private KeyCode jumpKey = KeyCode.Space;
     private bool canMove = true;
     private bool isRunning = false;
-    private float currentSpeed;
-    [SerializeField] private float walkSpeed = 3.0f;
-    [SerializeField] private float runSpeed = 6.0f;
+    [SerializeField] private float walkSpeed = 5.0f;
     [SerializeField] private float jumpForce = 10.0f;
     [SerializeField][Range(0.0f, 0.5f)] private float moveSmoothTime = 0f;
     private Vector2 currentDir = Vector2.zero;
@@ -40,27 +39,35 @@ public class PlayerController : MonoBehaviour
 
     [Header("Size Parameters")]
     private bool isSmall = false;
-    private Vector3 normalSize = Vector3.zero;
-    public Vector3 smallSize = Vector3.zero;
 
-
+    bool feet = false;
+    public float feetCoolDown = 0.5f;
+    bool canStep = true;
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         this.transform.parent = null;
         controller = GetComponent<CharacterController>();
-        currentSpeed = walkSpeed;
         Cursor.lockState = CursorLockMode.Locked;
         EventSystem.instance.playStarted += Activate;
         EventSystem.instance.rotateObj += SetCanLook;
+        EventSystem.instance.gameEnded += Deactivate;
     }
 
     void Update()
     {
-        
+        if (!active) return;        
+
         InterractWithObject();
         MouseLook();
         Move();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            EventSystem.instance.GoToMenu();
+        }
+
         //if (Input.GetKeyUp(KeyCode.Mouse0) && active)
         //    UI.instance.ToggleCanvas(true);
 
@@ -158,7 +165,6 @@ public class PlayerController : MonoBehaviour
 
     public void ScaleSpeed(float scaleMult)
     {
-        runSpeed *= scaleMult;
         walkSpeed *= scaleMult;
         jumpForce *= scaleMult;
         gravity *= scaleMult;
@@ -175,7 +181,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!canMove) return;
 
-        float currentSpeed = (Input.GetKey(KeyCode.LeftShift)) ? runSpeed : walkSpeed;
 
         Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -196,23 +201,41 @@ public class PlayerController : MonoBehaviour
 
         velocityY += gravity * Time.deltaTime;
 
-        Vector3 dir = (transform.forward * currentDir.y + transform.right * currentDir.x) * currentSpeed + Vector3.up * velocityY;
+        Vector3 dir = (transform.forward * currentDir.y + transform.right * currentDir.x) * walkSpeed + Vector3.up * velocityY;
 
         controller.Move(dir * Time.deltaTime);
+
+        //if(targetDir != Vector2.zero && canStep) 
+        //{
+        //    string audio;
+        //    if (feet)
+        //        audio = "rightFoot";
+        //    else
+        //        audio = "leftFoot";
+
+        //    FindObjectOfType<AudioManeger>().Play(audio);
+            
+        //    StartCoroutine(FeetCooldown());
+        //}
     }
 
-    
+    //IEnumerator FeetCooldown()
+    //{
+    //    canStep = false;
+    //    yield return new WaitForSeconds(feetCoolDown);
+    //    canStep = true;
+    //}
+        
 
     public void Activate()
     {
-
-        //UI.instance.ToggleCanvas(true);
+        active = true;
         Cursor.lockState = CursorLockMode.Locked;
 
     }
     public void Deactivate()
     {
-        //UI.instance.ToggleCanvas(false);
+        active = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
 

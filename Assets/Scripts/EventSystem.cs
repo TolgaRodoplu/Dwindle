@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using UnityEngine.SceneManagement;
 public class EventSystem : MonoBehaviour
 {
     public static EventSystem instance;
@@ -11,7 +11,7 @@ public class EventSystem : MonoBehaviour
     public event EventHandler<int> puzzleTriggered;
     public event EventHandler<bool> rotateObj, activateCross, pressEtoGrab, pressEtoRelease, holdRtoRotate;
     public event EventHandler<int[]> animationTriggered;
-    public event Action gameStarted, playStarted, passedPoint;
+    public event Action settingsOpened, gameEnded, playStarted, passedPoint;
     void Awake()
     {
 
@@ -22,16 +22,34 @@ public class EventSystem : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("sa");
+        
     }
 
+    public void ButtonAction(ButtonType btnType)
+    {
+        if(btnType == ButtonType.Play) 
+        {
+            StartGame();
+        }
+        else if(btnType == ButtonType.Settings) 
+        {
+            OpenSettings();
+        }
+        else if (btnType == ButtonType.Exit)
+        {
+            ExitGame();
+        }
+    }
 
+    public void GameEnded()
+    {
+        gameEnded?.Invoke();
+    }
 
-    //public void StartPlay()
-    //{
-    //    FindObjectOfType<AudioManeger>().Play("DungeonBackground");
-    //    playStarted?.Invoke();
-    //}
+    public void StartPlay()
+    {
+        playStarted?.Invoke();
+    }
 
     public void RotateObject(bool isRotating)
     {
@@ -68,5 +86,23 @@ public class EventSystem : MonoBehaviour
     public void CloseCloset()
     {
         passedPoint?.Invoke();
+    }
+    public void GoToMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+    public void StartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+
+    public void OpenSettings()
+    {
+        settingsOpened?.Invoke();
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

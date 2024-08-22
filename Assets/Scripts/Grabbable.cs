@@ -16,8 +16,8 @@ public class Grabbable : Interactable
     private Vector3 rot;
     private float rotationSens = 10f;
     private bool isRotating = false;
-    private Vector3 originalPos;
-    private Quaternion originalRot;
+    public Vector3 originalPos;
+    public Quaternion originalRot;
     void Awake()
     {
         originalPos = transform.position;

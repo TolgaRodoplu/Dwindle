@@ -9,6 +9,8 @@ public class UI : MonoBehaviour
     public GameObject pressEtoGrab;
     public GameObject pressEtoRelease;
     public GameObject holdRtoRotate;
+    public GameObject outro;
+    public GameObject settings;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,8 @@ public class UI : MonoBehaviour
         EventSystem.instance.pressEtoGrab += SetPressEGrab;
         EventSystem.instance.pressEtoRelease += SetPressERelease;
         EventSystem.instance.holdRtoRotate += SetHoldRRotate;
+        EventSystem.instance.gameEnded += EnableOutro;
+        EventSystem.instance.settingsOpened += EnableSettings;
     }
 
     private void SetPressERelease(object sender, bool e)
@@ -49,5 +53,15 @@ public class UI : MonoBehaviour
         {
             crosshair.SetActive(e);
         }
+    }
+
+    private void EnableOutro()
+    { 
+        outro.SetActive(true); 
+    }
+
+    private void EnableSettings()
+    {
+        settings.active = true;
     }
 }
