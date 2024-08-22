@@ -10,4 +10,4 @@ Implemented a portal system to create a seemless shrinking effect.
 
 You can download and play the game for yourself by clicking [here](https://gusullupapaz.itch.io/dwindle).
 
-Credits to [Smooth PORTALS in Unity by Brackeys]([url](https://www.youtube.com/watch?v=cuQao3hEKfs)) and [Coding Adventure: Portals by Sebastian Lague](https://www.youtube.com/watch?v=cWpFZbjtSQg&t=811s) for the portal implementation.
+Credits to [Smooth PORTALS in Unity by Brackeys](https://www.youtube.com/watch?v=cuQao3hEKfs) and [Coding Adventure: Portals by Sebastian Lague](https://www.youtube.com/watch?v=cWpFZbjtSQg&t=811s) for the portal implementation.
